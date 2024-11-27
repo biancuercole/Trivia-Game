@@ -25,8 +25,7 @@ public class UIManagment : MonoBehaviour
     private Color _originalButtonColor;
 
     public static UIManagment Instance { get; private set; }
-
-
+    
     void Awake()
     {
         // Configura la instancia
@@ -59,6 +58,7 @@ public class UIManagment : MonoBehaviour
         GameManager.Instance.CategoryAndQuestionQuery(queryCalled);
 
     }
+
     public void OnButtonClick(int buttonIndex)
     {
         
@@ -106,6 +106,8 @@ public class UIManagment : MonoBehaviour
 
     public void backButton()
     {
+        Destroy(GameManager.Instance);
+        Destroy(UIManagment.Instance);
         SceneManager.LoadScene("LoginScene");
     }
 }

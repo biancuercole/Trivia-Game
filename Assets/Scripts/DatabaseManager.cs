@@ -43,10 +43,6 @@ public class DatabaseManager : MonoBehaviour
 
         print("Response from query: "+ response.Models.Count);
         print("ResponseList from GM: "+ GameManager.Instance.responseList.Count);
-
-    
-
-
     }
 
 }

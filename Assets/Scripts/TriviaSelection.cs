@@ -18,10 +18,15 @@ public class TriviaSelection : MonoBehaviour
     List<trivia> trivias = new List<trivia>();
     [SerializeField] TMP_Dropdown _dropdown;
 
+    public static int SelectedTriviaId { get; private set; } 
+
+    public static TriviaSelection Instance { get; private set; } 
+
     public DatabaseManager databaseManager;
 
     async void Start()
     {
+        Instance = this; 
         clientSupabase = new Supabase.Client(supabaseUrl, supabaseKey);
 
         await SelectTrivias();
@@ -38,18 +43,11 @@ public class TriviaSelection : MonoBehaviour
         if (response != null)
         {
             trivias = response.Models;
-            //Debug.Log("Trivias seleccionadas: " + trivias.Count);
-            //foreach (var trivia in trivias)
-            //{
-            //    Debug.Log("ID: " + trivia.id + ", Categor�a: " + trivia.category);
-            //}
         }
-
     }
 
     void PopulateDropdown()
     {
-        
         _dropdown.ClearOptions();
 
         List<string> categories = new List<string>();
@@ -65,13 +63,17 @@ public class TriviaSelection : MonoBehaviour
     public void OnStartButtonClicked()
     {
         int selectedIndex = _dropdown.value;
+
         string selectedTrivia = _dropdown.options[selectedIndex].text;
 
         PlayerPrefs.SetInt("SelectedIndex", selectedIndex+1);
         PlayerPrefs.SetString("SelectedTrivia", selectedTrivia);
 
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public void backButton()
+    {
+        SceneManager.LoadScene("LoginScene");
+    }
 }
