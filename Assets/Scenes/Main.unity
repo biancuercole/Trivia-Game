@@ -1189,7 +1189,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 615451954}
         m_TargetAssemblyTypeName: UIManagment, Assembly-CSharp
-        m_MethodName: PreviousScene
+        m_MethodName: backButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

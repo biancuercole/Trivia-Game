@@ -68,22 +68,19 @@ public class UIManagment : MonoBehaviour
 
         if (selectedAnswer == _correctAnswer)
         {
-            Debug.Log("¡Respuesta correcta!");
+            Debug.Log("Â¡Respuesta correcta!");
             ChangeButtonColor(buttonIndex, Color.green);
             Invoke("RestoreButtonColor", 2f);
             GameManager.Instance._answers.Clear();
-            Invoke("NextAnswer", 2f);
-            
+            Invoke("NextQuestion", 2f);
         }
         else
         {
-            Debug.Log("Respuesta incorrecta. Inténtalo de nuevo.");
+            Debug.Log("Respuesta incorrecta. Intï¿½ntalo de nuevo.");
             
             ChangeButtonColor(buttonIndex, Color.red);
             Invoke("RestoreButtonColor", 2f);
         }
-
-
     }
 
     private void ChangeButtonColor(int buttonIndex, Color color)
@@ -101,18 +98,14 @@ public class UIManagment : MonoBehaviour
         }
     }
 
-    private void NextAnswer()
+    private void NextQuestion()
     {
         queryCalled = false;
+        GameManager.Instance.randomQuestionIndex = Random.Range(0, GameManager.Instance.responseList.Count);
     }
 
-    public void PreviousScene()
+    public void backButton()
     {
-        Destroy(GameManager.Instance);
-        Destroy(UIManagment.Instance);
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("LoginScene");
     }
-
-
 }
