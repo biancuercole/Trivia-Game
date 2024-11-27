@@ -6,14 +6,15 @@ using Postgrest.Models;
 using TMPro;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class SupabaseManager : MonoBehaviour
-
 {
     [Header("Campos de Interfaz")]
     [SerializeField] TMP_InputField _userIDInput;
     [SerializeField] TMP_InputField _userPassInput;
     [SerializeField] TextMeshProUGUI _stateText;
+    [SerializeField] GameObject playB;
 
     string supabaseUrl = "https://uljrheyookexdvvzvzns.supabase.co"; //COMPLETAR
     string supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsanJoZXlvb2tleGR2dnp2em5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1NjQ1MjksImV4cCI6MjA0ODE0MDUyOX0.USQ8d_7qlGsbmQT5VixpP1q5v-DqeBRY0DTrLzRj3AY"; //COMPLETAR
@@ -21,6 +22,11 @@ public class SupabaseManager : MonoBehaviour
     Supabase.Client clientSupabase;
 
     private usuarios _usuarios = new usuarios();
+
+    private void Start()
+    {
+        playB.SetActive(false);
+    }
 
     //INICIAR SESIÓN
     public async void UserLogin()
@@ -48,6 +54,7 @@ public class SupabaseManager : MonoBehaviour
             {
                 _stateText.text = "LOGIN SUCCESSFUL";
                 _stateText.color = Color.green;
+                playB.SetActive(true);
             }
             else
             {
@@ -99,7 +106,7 @@ public class SupabaseManager : MonoBehaviour
         {
             id = nuevoId,
             username = _userIDInput.text,
-            age = Random.Range(0, 100), // Puedes cambiar esto según tus necesidades
+            age = Random.Range(0, 100), 
             password = _userPassInput.text,
         };
 
@@ -113,6 +120,7 @@ public class SupabaseManager : MonoBehaviour
         {
             _stateText.text = "Usuario Correctamente Ingresado";
             _stateText.color = Color.green;
+            playB.SetActive(true);
         }
         else
         {
@@ -120,6 +128,11 @@ public class SupabaseManager : MonoBehaviour
             _stateText.text = resultado.ResponseMessage.ToString();
             _stateText.color = Color.red;
         }
+    }
+
+    public void playButton()
+    {
+        SceneManager.LoadScene("TriviaSelectScene"); 
     }
 }
 
