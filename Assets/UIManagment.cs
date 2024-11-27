@@ -25,7 +25,7 @@ public class UIManagment : MonoBehaviour
     private Color _originalButtonColor;
 
     public static UIManagment Instance { get; private set; }
-    
+
     void Awake()
     {
         // Configura la instancia
