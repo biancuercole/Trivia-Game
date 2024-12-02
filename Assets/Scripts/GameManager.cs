@@ -22,7 +22,9 @@ public class GameManager : MonoBehaviour
 
     public bool queryCalled;
 
-    private int _points;
+    public int points;
+    public int totalPoints = 0;
+    public int correctAnswers = 0;
     public float timer;
     public float timeLeft;
     public float initTime = 10f;
@@ -91,9 +93,20 @@ public class GameManager : MonoBehaviour
             //chequear si ya se mostraron todas las preguntas disponibles
             if (_numQuestionAnswered >= TotalQuestions + 1)
             {
+                SceneManager.LoadScene("Results");
                 Debug.Log("¡Has respondido todas las preguntas!");
             }
         }
+    }
+
+    public void AddPoints(int pointsAdded)
+    {
+        totalPoints += pointsAdded;
+    }
+
+    public int GetTotalPoints()
+    {
+        return totalPoints;
     }
 }
 

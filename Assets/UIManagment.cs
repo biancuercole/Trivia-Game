@@ -10,10 +10,12 @@ public class UIManagment : MonoBehaviour
     [SerializeField] TextMeshProUGUI _categoryText;
     [SerializeField] TextMeshProUGUI _questionText;
     [SerializeField] TextMeshProUGUI _timerText;
+    [SerializeField] TextMeshProUGUI _scoreText;
     string _correctAnswer;
     private List<string> _answers = new List<string>();
     public Button[] _buttons = new Button[3];
     [SerializeField] Button _backButton;
+    [SerializeField] Button _nextButton;
 
     public bool queryCalled;
     public bool startTimer;
@@ -37,6 +39,7 @@ public class UIManagment : MonoBehaviour
 
     private void Start()
     {
+        _nextButton.gameObject.SetActive(false);
         startTimer = true;
         queryCalled = false;
         _originalButtonColor = _buttons[0].GetComponent<Image>().color;
@@ -60,10 +63,19 @@ public class UIManagment : MonoBehaviour
             {
                 GameManager.Instance.timer = 0;
                 Debug.Log("Tiempo agotado");
+                TimeOver();
             }
            
             _timerText.text = "Tiempo: " + GameManager.Instance.timer.ToString("f0");
         }
+    }
+
+    private void TimeOver()
+    {
+        Debug.Log("Tiempo agotado");
+        startTimer = false; 
+        _nextButton.gameObject.SetActive(true); 
+        SceneManager.LoadScene("Results");
     }
 
     public void OnButtonClick(int buttonIndex)
@@ -75,10 +87,9 @@ public class UIManagment : MonoBehaviour
         {
             Debug.Log("¡Respuesta correcta!");
             ChangeButtonColor(buttonIndex, Color.green);
-            Invoke("RestoreButtonColor", 2f);
             GameManager.Instance._answers.Clear();
-            Invoke("NextQuestion", 2f);
-            startTimer = false;
+            _nextButton.gameObject.SetActive(true);
+            CorrectAnswer();
         }
         else
         {
@@ -86,6 +97,7 @@ public class UIManagment : MonoBehaviour
             startTimer = false;            
             ChangeButtonColor(buttonIndex, Color.red);
             Invoke("RestoreButtonColor", 2f);
+            SceneManager.LoadScene("Results");
         }
     }
 
@@ -104,10 +116,15 @@ public class UIManagment : MonoBehaviour
         }
     }
 
+    public void NextButtonOnClick()
+    {
+        RestoreButtonColor();
+        Invoke("NextQuestion", 1f);
+    }
+
     private void NextQuestion()
     {
         queryCalled = false;
-        GameManager.Instance.randomQuestionIndex = Random.Range(0, GameManager.Instance.responseList.Count);
     }
 
     public void backButton()
@@ -115,5 +132,20 @@ public class UIManagment : MonoBehaviour
         Destroy(GameManager.Instance);
         Destroy(UIManagment.Instance);
         SceneManager.LoadScene("LoginScene");
+    }
+
+    private void CorrectAnswer()
+    {
+        if(startTimer)
+        {
+            startTimer = false;
+            Debug.Log("Tiempo detenido");
+            GameManager.Instance.timeLeft = Mathf.RoundToInt(10 - GameManager.Instance.timer);
+
+            GameManager.Instance.points = Mathf.RoundToInt(10 - GameManager.Instance.timeLeft);
+            GameManager.Instance.AddPoints(GameManager.Instance.points);
+            _scoreText.text = "Puntos: " + GameManager.Instance.GetTotalPoints();
+            GameManager.Instance.correctAnswers += 1;
+        }
     }
 }
