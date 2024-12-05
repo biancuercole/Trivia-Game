@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
 
     public bool queryCalled;
 
+    public int SelectedTriviaId;
     public int points;
     public int totalPoints = 0;
     public int correctAnswers = 0;

@@ -60,17 +60,23 @@ public class TriviaSelection : MonoBehaviour
         _dropdown.AddOptions(categories);
     }
 
-    public void OnStartButtonClicked()
-    {
-        int selectedIndex = _dropdown.value;
+public void OnStartButtonClicked()
+{
+    int selectedIndex = _dropdown.value;
 
-        string selectedTrivia = _dropdown.options[selectedIndex].text;
+    // Obtener la trivia seleccionada de la lista
+    SelectedTriviaId = trivias[selectedIndex].id; // Aquí asignas el ID de la trivia seleccionada.
 
-        PlayerPrefs.SetInt("SelectedIndex", selectedIndex+1);
-        PlayerPrefs.SetString("SelectedTrivia", selectedTrivia);
+    // Guardar en PlayerPrefs (opcional, si necesitas persistencia adicional)
+    PlayerPrefs.SetInt("SelectedIndex", selectedIndex + 1);
+    PlayerPrefs.SetString("SelectedTrivia", trivias[selectedIndex].category);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
+    Debug.Log("Trivia seleccionada con ID: " + SelectedTriviaId);
+
+    // Cambiar a la siguiente escena
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+}
+
 
     public void backButton()
     {
