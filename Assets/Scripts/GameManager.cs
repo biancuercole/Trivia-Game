@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     }
     string _correctAnswer;
 
+    Supabase.Client clientSupabase;
+
     public int currentTriviaIndex = 0;
     public int _numQuestionAnswered = 0;
 
@@ -28,6 +30,9 @@ public class GameManager : MonoBehaviour
     public float timer;
     public float timeLeft;
     public float initTime = 10f;
+
+    string supabaseUrl = "https://uljrheyookexdvvzvzns.supabase.co"; //COMPLETAR
+    string supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsanJoZXlvb2tleGR2dnp2em5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1NjQ1MjksImV4cCI6MjA0ODE0MDUyOX0.USQ8d_7qlGsbmQT5VixpP1q5v-DqeBRY0DTrLzRj3AY";
 
     public static GameManager Instance { get; private set; }
 
@@ -47,6 +52,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        clientSupabase = new Supabase.Client(supabaseUrl, supabaseKey);
         timer = initTime;
         queryCalled = false;
     }
@@ -93,9 +99,59 @@ public class GameManager : MonoBehaviour
             //chequear si ya se mostraron todas las preguntas disponibles
             if (_numQuestionAnswered >= TotalQuestions + 1)
             {
-                SceneManager.LoadScene("Results");
-                Debug.Log("¡Has respondido todas las preguntas!");
+                GameOver();
             }
+        }
+    }
+
+    public void GameOver()
+    {
+        int userId = SupabaseManager.CurrentUserId;
+        int categoryId = TriviaSelection.SelectedTriviaId;
+        int finalScore = totalPoints;
+        int totalTime = Mathf.RoundToInt(timer);
+        int correct = correctAnswers;
+
+        SaveData(userId, categoryId, finalScore, totalTime, correct);
+        SceneManager.LoadScene("Results");
+    }
+
+    public async void SaveData(int userId, int categoryId, int finalScore, int totalTime, int correct)
+    {
+        var lastId = await clientSupabase
+            .From<intentos>()
+            .Select("id")
+            .Order(intentos => intentos.id, Postgrest.Constants.Ordering.Descending) // ordena en orden descendente para obtener el último id
+            .Get();
+        int newId = 1;
+
+        if (lastId.Models.Count > 0)
+        {
+            newId = lastId.Models[0].id + 1; 
+        }
+
+        var newSave = new intentos
+        {
+            id = newId,
+            id_usuario = userId,
+            id_categoria = categoryId,
+            puntaje = finalScore,
+            tiempo = totalTime,
+            resp_correct = correct
+        };
+
+        // insertar el nuevo intento en Supabase
+        var resultado = await clientSupabase
+            .From<intentos>()
+            .Insert(new[] { newSave });
+
+        if (resultado.ResponseMessage.IsSuccessStatusCode)
+        {
+            Debug.Log("Intento guardado correctamente en Supabase.");
+        }
+        else
+        {
+            Debug.LogError("Error al guardar el intento en Supabase: " + resultado.ResponseMessage);
         }
     }
 

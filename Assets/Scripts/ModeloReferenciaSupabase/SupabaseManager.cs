@@ -23,6 +23,9 @@ public class SupabaseManager : MonoBehaviour
 
     private usuarios _usuarios = new usuarios();
 
+    public static string CurrentUsername { get; private set; } // para guardar el nombre del usuario actual
+    public static int CurrentUserId { get; private set; }
+
     private void Start()
     {
         playB.SetActive(false);
@@ -50,10 +53,13 @@ public class SupabaseManager : MonoBehaviour
 
         if (login_password.Models.Count > 0)
         {
-            if (login_password.Model.password.Equals(_userPassInput.text))
+            var user = login_password.Models[0];
+            if (user.password.Equals(_userPassInput.text))
             {
                 _stateText.text = "LOGIN SUCCESSFUL";
                 _stateText.color = Color.green;
+                SupabaseManager.CurrentUsername = _userIDInput.text;
+                SupabaseManager.CurrentUserId = user.id;
                 playB.SetActive(true);
             }
             else
@@ -120,6 +126,8 @@ public class SupabaseManager : MonoBehaviour
         {
             _stateText.text = "Usuario Correctamente Ingresado";
             _stateText.color = Color.green;
+            SupabaseManager.CurrentUsername = _userIDInput.text; // guarda el nombre de usuario actual
+            SupabaseManager.CurrentUserId = nuevoId;
             playB.SetActive(true);
         }
         else
@@ -133,6 +141,11 @@ public class SupabaseManager : MonoBehaviour
     public void playButton()
     {
         SceneManager.LoadScene("TriviaSelectScene"); 
+    }
+
+    public void rankingScene()
+    {
+        SceneManager.LoadScene("Ranking");
     }
 }
 
