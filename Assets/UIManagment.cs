@@ -125,6 +125,7 @@ public class UIManagment : MonoBehaviour
     private void NextQuestion()
     {
         queryCalled = false;
+        _nextButton.gameObject.SetActive(false);
     }
 
     public void backButton()
