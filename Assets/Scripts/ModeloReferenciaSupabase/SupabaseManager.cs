@@ -47,7 +47,7 @@ public class SupabaseManager : MonoBehaviour
         // filtro seg�n datos de login
         var login_password = await clientSupabase
           .From<usuarios>()
-          .Select("password")
+          .Select("*")
           .Where(usuarios => usuarios.username == _userIDInput.text)
           .Get();
 
@@ -57,7 +57,7 @@ public class SupabaseManager : MonoBehaviour
             if (user.password.Equals(_userPassInput.text))
             {
                 _stateText.text = "LOGIN SUCCESSFUL";
-                _stateText.color = Color.green;
+                _stateText.color = Color.blue;
                 SupabaseManager.CurrentUsername = _userIDInput.text;
                 SupabaseManager.CurrentUserId = user.id;
                 playB.SetActive(true);
@@ -125,7 +125,7 @@ public class SupabaseManager : MonoBehaviour
         if (resultado.ResponseMessage.IsSuccessStatusCode)
         {
             _stateText.text = "Usuario Correctamente Ingresado";
-            _stateText.color = Color.green;
+            _stateText.color = Color.blue;
             SupabaseManager.CurrentUsername = _userIDInput.text; // guarda el nombre de usuario actual
             SupabaseManager.CurrentUserId = nuevoId;
             playB.SetActive(true);

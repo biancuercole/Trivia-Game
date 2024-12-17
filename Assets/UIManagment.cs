@@ -98,6 +98,7 @@ public class UIManagment : MonoBehaviour
             ChangeButtonColor(buttonIndex, Color.red);
             Invoke("RestoreButtonColor", 2f);
             SceneManager.LoadScene("Results");
+            GameManager.Instance.GameOver();
         }
     }
 
