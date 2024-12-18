@@ -18,6 +18,11 @@ public class HandleButton : MonoBehaviour
         SceneManager.LoadScene("Menu");
     }
 
+    public void backToMenu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+
     public void StartButton()
     {
         SceneManager.LoadScene("LoginScene");

@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
 public class GameManager : MonoBehaviour
 {
     //public TriviaManager triviaManager;
 
     public List<question> responseList;
-    private List<int> usedQuestionIndices = new List<int>();
+    public List<int> usedQuestionIndices = new List<int>();
     public int randomQuestionIndex = 0;
     public List<string> _answers = new List<string>();
     public int TotalQuestions
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour
     public int _numQuestionAnswered = 0;
 
     public bool queryCalled;
+    public bool isGameOver = false;
 
     public int SelectedTriviaId;
     public int points;
@@ -51,11 +53,29 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
+    async void Start()
     {
+        isGameOver = false;
         clientSupabase = new Supabase.Client(supabaseUrl, supabaseKey);
         timer = initTime;
         queryCalled = false;
+
+        SelectedTriviaId = TriviaSelection.SelectedTriviaId;
+        await LoadQuestionsByCategory(SelectedTriviaId); // Carga las preguntas según la categoría
+    }
+
+    public async Task LoadQuestionsByCategory(int categoryId)
+    {
+        var response = await clientSupabase
+            .From<question>()
+            .Where(q => q.trivia_id == categoryId) // Filtra por la categoría seleccionada
+            .Select("*")
+            .Get();
+
+        if (response != null)
+        {
+            responseList = response.Models; // Asigna las preguntas filtradas
+        }
     }
 
     public void CategoryAndQuestionQuery(bool isCalled)
@@ -107,6 +127,9 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        if (isGameOver) return; // Salir si ya se ejecutó
+        isGameOver = true;
+
         int userId = SupabaseManager.CurrentUserId;
         int categoryId = TriviaSelection.SelectedTriviaId;
         int finalScore = totalPoints;

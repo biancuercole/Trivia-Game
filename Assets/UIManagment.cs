@@ -75,7 +75,7 @@ public class UIManagment : MonoBehaviour
         Debug.Log("Tiempo agotado");
         startTimer = false; 
         _nextButton.gameObject.SetActive(true); 
-        SceneManager.LoadScene("Results");
+        GameManager.Instance.GameOver();
     }
 
     public void OnButtonClick(int buttonIndex)
@@ -97,7 +97,6 @@ public class UIManagment : MonoBehaviour
             startTimer = false;            
             ChangeButtonColor(buttonIndex, Color.red);
             Invoke("RestoreButtonColor", 2f);
-            SceneManager.LoadScene("Results");
             GameManager.Instance.GameOver();
         }
     }

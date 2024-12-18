@@ -100,7 +100,7 @@ public class RankingManager : MonoBehaviour
 
     void ShowGeneralRanking()
     {
-        var sortedUsers = dataList.OrderByDescending(x => x.puntaje).Take(7);;
+        var sortedUsers = dataList.OrderByDescending(x => x.puntaje).Take(5);;
 
         string generalText = "";
 
@@ -125,7 +125,7 @@ public class RankingManager : MonoBehaviour
         if (selectedCategory != null)
         {
             // filtra los intentos por la categoría seleccionada y ordena por puntaje descendente
-            var categoryUsers = dataList.Where(x => x.id_categoria == selectedCategory.id).OrderByDescending(x => x.puntaje).Take(7);
+            var categoryUsers = dataList.Where(x => x.id_categoria == selectedCategory.id).OrderByDescending(x => x.puntaje).Take(5);
 
             string categoryText = "";
         foreach (var intento in categoryUsers)
@@ -147,7 +147,6 @@ public class RankingManager : MonoBehaviour
         string selectedCategory = dropdown.options[index].text;
         ShowCategoryRanking(selectedCategory);
     }
-
 
      public void ChangeScene(string name)
     {

@@ -73,6 +73,11 @@ public void OnStartButtonClicked()
 
     Debug.Log("Trivia seleccionada con ID: " + SelectedTriviaId);
 
+    GameManager.Instance.responseList = new List<question>(); // Limpia preguntas anteriores
+    GameManager.Instance.correctAnswers = 0;
+    GameManager.Instance._numQuestionAnswered = 0;
+    GameManager.Instance.usedQuestionIndices.Clear();
+    
     // Cambiar a la siguiente escena
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 }
